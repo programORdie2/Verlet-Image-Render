@@ -85,10 +85,11 @@ function resolveCollision(p1: Particle, p2: Particle) {
 		const nx = dx / dist;
 		const ny = dy / dist;
 
-		p1.pos.x -= nx * overlap;
-		p1.pos.y -= ny * overlap;
-		p2.pos.x += nx * overlap;
-		p2.pos.y += ny * overlap;
+		const dampingFactor = 0.9; // less than 1 to dampen extra energy
+		p1.pos.x -= nx * overlap * dampingFactor;
+		p1.pos.y -= ny * overlap * dampingFactor;
+		p2.pos.x += nx * overlap * dampingFactor;
+		p2.pos.y += ny * overlap * dampingFactor;
 	}
 }
 
@@ -97,14 +98,20 @@ const ctx = canvas.getContext("2d")!;
 canvas.width = 400;
 canvas.height = 400;
 
+const radius = 5;
+const particlesNeeded = 1800;
 const particles: Particle[] = [];
 const gravity = new Vector(0, 500);
+let speed = 1;
 let frameCount = 0;
+
+document.getElementById("slider")?.addEventListener("input", (e) => {
+	speed = parseInt((e.target as HTMLInputElement).value);
+});
 
 function spawnParticle() {
 	const x = canvas.width / 2;
 	const y = 20;
-	const radius = 8;
 	const offset = -3;
 	const particle = new Particle(radius, "blue", x, y, offset);
 	particles.push(particle);
@@ -112,7 +119,7 @@ function spawnParticle() {
 
 function update(dt: number) {
 	// Spawn a particle every 6 frames (assuming 60 FPS)
-	if (particles.length < 50 && frameCount % 6 === 0) {
+	if (particles.length < particlesNeeded && frameCount % 6 === 0) {
 		spawnParticle();
 	}
 	frameCount++;
@@ -123,9 +130,13 @@ function update(dt: number) {
 		particle.constrain(canvas.width, canvas.height);
 	}
 
-	for (let i = 0; i < particles.length; i++) {
-		for (let j = i + 1; j < particles.length; j++) {
-			resolveCollision(particles[i], particles[j]);
+	const collisionIterations = 3; // Experiment with this value
+
+	for (let iter = 0; iter < collisionIterations; iter++) {
+		for (let i = 0; i < particles.length; i++) {
+			for (let j = i + 1; j < particles.length; j++) {
+				resolveCollision(particles[i], particles[j]);
+			}
 		}
 	}
 }
@@ -139,10 +150,16 @@ function draw() {
 
 const DT = 1 / 60;
 function loop() {
-	update(DT);
+	if (speed > 1) {
+		for (let i = 0; i < speed; i++) {
+			update(DT);
+		}
+	} else {
+		update(DT);
+	}
 	draw();
 
-	requestAnimationFrame(loop);
+	setTimeout(loop, DT * 1000);
 }
 
 loop();
