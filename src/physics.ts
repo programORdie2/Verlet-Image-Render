@@ -38,14 +38,13 @@ export class Particle {
 	) {
 		this.id = id;
 		this.pos = new Vector(x, y);
-		this.prev = new Vector(x - initialVX, y); // Initial velocity applied deterministically
+		this.prev = new Vector(x - initialVX, y - 10); // Initial velocity applied deterministically
 	}
 
 	update(dt: number) {
-		const temp = new Vector(this.pos.x, this.pos.y);
-		let velocity = this.pos.sub(this.prev).scale(0.99);
+		const velocity = this.pos.sub(this.prev).scale(0.99);
+		this.prev = this.pos;
 		this.pos = this.pos.add(velocity).add(this.acceleration.scale(dt * dt));
-		this.prev = temp;
 		this.acceleration = new Vector(0, 0);
 	}
 
