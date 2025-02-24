@@ -4,19 +4,108 @@
 		<meta charset="UTF-8" />
 		<title>Verlet Particle System</title>
 		<style>
-			body {
+			* {
+				box-sizing: border-box;
 				margin: 0;
-				overflow: hidden;
+				padding: 0;
 			}
-			canvas {
-				display: block;
-				background: #111;
+
+			body {
+				font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+				background: #222;
+				color: #999;
+				line-height: 1.5;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				min-height: 100vh;
+			}
+
+			h1,
+			h2 {
+				color: #fff;
+				margin-bottom: 0.5em;
+			}
+
+			#state {
+				font-size: 1.5em;
+				margin: 1em;
+			}
+
+			#canvas {
+				border: 1px solid #333;
+			}
+
+			#file {
+				margin-top: -2em;
+			}
+
+			#fileInput {
+				opacity: 0;
+				width: 0.1px;
+				height: 0.1px;
+				position: absolute;
+			}
+
+			#file label {
+				cursor: pointer;
+				background: #333;
+				color: #fff;
+				padding: 0.5em 1em;
+				display: inline-block;
+				border-radius: 3px;
+				transition: all 0.2s;
+			}
+
+			#file label:hover {
+				background: #444;
+			}
+
+			#slider {
+				margin-bottom: 1em;
+			}
+
+			#speedText {
+				font-size: 1.5em;
 			}
 		</style>
 	</head>
 	<body>
+		<h1>Verlet Particle Image Render</h1>
+		<h2 id="state"></h2>
+		<div id="file">
+			<input type="file" id="fileInput" accept="image/*" />
+			<label for="fileInput">Upload image</label>
+		</div>
 		<canvas id="canvas"></canvas>
-		<input type="range" id="slider" min="1" max="200" value="1" />
+		<h2 id="speedDesc">Speed: <span id="speedText">1x</span></h2>
+		<input
+			type="range"
+			id="slider"
+			min="1"
+			max="50"
+			value="1"
+			style="
+				width: 200px;
+				height: 20px;
+				display: block;
+				background: linear-gradient(
+					to right,
+					#111 0%,
+					#111 50%,
+					#fff 50%,
+					#fff 100%
+				);
+			"
+		/>
+		<script>
+			const slider = document.getElementById("slider");
+			const speedText = document.getElementById("speedText");
+			slider.addEventListener("input", () => {
+				speedText.innerText = `${slider.value}x`;
+			});
+		</script>
 		<script type="module" src="src/main.ts"></script>
 	</body>
 </html>

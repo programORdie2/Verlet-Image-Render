@@ -70,7 +70,7 @@ export class Particle {
 	draw(ctx: CanvasRenderingContext2D, colors: string[]) {
 		ctx.beginPath();
 		ctx.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2);
-		ctx.fillStyle = colors[this.id] || "blue";
+		ctx.fillStyle = colors[this.id] || `hsl(${this.id / 2}, 50%, 50%)`;
 		ctx.fill();
 	}
 }
@@ -141,8 +141,7 @@ function resolveCollisions() {
 			for (let i = 0; i < cellParticles.length; i++) {
 				for (let j = 0; j < neighborParticles.length; j++) {
 					if (i !== j) {
-						for (let _ = 0; _ < 2; _++)
-							resolveCollision(cellParticles[i], neighborParticles[j]);
+						resolveCollision(cellParticles[i], neighborParticles[j]);
 					}
 				}
 			}
@@ -150,7 +149,7 @@ function resolveCollisions() {
 	}
 }
 
-const cellSize = 100; // Adjust based on particle size
+const cellSize = 80; // Adjust based on particle size
 const spatialGrid: Map<string, Particle[]> = new Map();
 
 const gravity = new Vector(0, 600);
@@ -167,7 +166,12 @@ export function physicsLoop(
 	}
 
 	updateSpatialGrid(particles);
+	let start = performance.now();
 	for (let i = 0; i < 2; i++) {
 		resolveCollisions();
 	}
+
+	const cTime = performance.now() - start;
+
+	return { cTime };
 }
