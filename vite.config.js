@@ -1,4 +1,4 @@
 /** @type {import('vite').UserConfig} */
 export default {
-	base: "/Verlet-Image-Renderer/",
+	base: "/Verlet-Image-Render/",
 };
