@@ -4,7 +4,7 @@
 This project takes an input image and uses Verlet integration to simulate particles falling into their precomputed final positions. The positions are determined before the simulation starts, allowing each particle to be assigned its correct color in advance. As the simulation runs, the image naturally "paints" itself over time.
 
 ## Demo
-[Insert demo video or GIF here]
+https://github.com/user-attachments/assets/62c23250-74d7-443b-952f-b0f0a3cc962a
 
 ## How It Works
 1. **Image Upload**: The user uploads an image.
